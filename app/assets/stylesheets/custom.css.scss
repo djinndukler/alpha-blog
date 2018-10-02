@@ -42,7 +42,7 @@ $navbar-default-bg: #FFF;
 }
 
 .article-actions{
-    border-top: 1px solid #3e3e5b;
+    border-top: 1px solid #fff;
     padding-top: 5px;
 }
 
@@ -50,11 +50,21 @@ $navbar-default-bg: #FFF;
     margin-top: 0;
 }
 
+.article-title{
+    font-weight: bold;
+    font-size: 1.5am;
+}
+
+.article-body{
+    border-top: 1px solid #fff;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
 .footer{
     margin-top: 45px;
     padding-top: 5px;
     border-top: 1px solid #3e3e5b;
-    color: #c2c2d6;
+    color: #fff;
 }
 
 .footer a:hover{
