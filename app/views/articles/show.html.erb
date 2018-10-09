@@ -17,9 +17,11 @@
     <hr>
     <%= simple_format(@article.description) %>
     <div class="article-actions">
-    <%= link_to "Editar Artigo", edit_article_path(@article), class: "btn btn-xs btn-primary" %>
-    <%= link_to "Deletar Artigo", article_path(@article), method: :delete, data: { confirm: "Deseja realmente deletar o artigo?"}, class: "btn btn-xs btn-danger" %>
-    <%= link_to "Ver todos os artigos", articles_path, class: "btn btn-xs btn-success"%>
+        <% if logged_in? && current_user==@article.user %>
+            <%= link_to "Editar Artigo", edit_article_path(@article), class: "btn btn-xs btn-primary" %>
+            <%= link_to "Deletar Artigo", article_path(@article), method: :delete, data: { confirm: "Deseja realmente deletar o artigo?"}, class: "btn btn-xs btn-danger" %>
+        <% end %>
+        <%= link_to "Ver todos os artigos", articles_path, class: "btn btn-xs btn-success"%>
     </div>
 </div>
 
