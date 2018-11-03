@@ -1,22 +1,23 @@
 class UsersController < ApplicationController
     
     before_action :set_user, only: [:edit, :update, :show]
-    before_action :require_same_user, only: [:edit, :update]
+    before_action :require_same_user, only: [:edit, :update, :destroy]
+    before_action :require_admin, only: [:destroy]
     
     def index
         @users = User.paginate(page: params[:page], per_page: 4)
     end
     
     def new
-        @users = User.new
+        @user = User.new
     end
     
     def create
-        @users = User.new(user_params)
-        if @users.save
-            session[:user_id] = @users.id
-            flash[:success] = "Bem-vindo ao Blog, #{@users.username}"
-            redirect_to user_path(@users)
+        @user = User.new(user_params)
+        if @user.save
+            session[:user_id] = @user.id
+            flash[:success] = "Bem-vindo ao Blog, #{@user.username}"
+            redirect_to user_path(@user)
         else
             render 'new'
         end
@@ -26,7 +27,7 @@ class UsersController < ApplicationController
     end
     
     def update
-        if @users.update(user_params)
+        if @user.update(user_params)
             flash[:success] = "Sua conta foi atualizada com sucesso!"
             redirect_to articles_path
         else
@@ -35,7 +36,14 @@ class UsersController < ApplicationController
     end
     
     def show
-        @users_articles = @users.articles.paginate(page: params[:page], per_page: 4)
+        @user_articles = @user.articles.paginate(page: params[:page], per_page: 4)
+    end
+    
+    def destroy
+        @user = User.find(params[:id])
+        @user.destroy
+        flash[:danger] = "O usuário e seus artigos foram deletados."
+        redirect_to users_path
     end
     
     private
@@ -44,12 +52,19 @@ class UsersController < ApplicationController
     end
     
     def set_user
-        @users = User.find(params[:id]) 
+        @user = User.find(params[:id]) 
     end
     
     def require_same_user
-        if current_user != @user
+        if current_user != @user and !current_user.admin?
             flash[:danger] = "Você só pode editar a sua conta."
+            redirect_to root_path
+        end
+    end
+    
+    def require_admin
+        if logged_in? && !current_user.admin?
+            flash[:danger] = "Somente administradores podem realizar essa ação."
             redirect_to root_path
         end
     end
